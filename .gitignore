@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Roulette game files
+src/components/RouletteGame.jsx*
+src/components/RouletteGame.css*
+src/components/RouletteWheel.css*
