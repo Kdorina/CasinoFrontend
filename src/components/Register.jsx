@@ -198,6 +198,11 @@ const Register = () => {
         <button type="submit">Regisztrálok</button>
       </form>
 
+      <div className="login-link">
+        Már van fiókod?{" "}
+        <a href="/login">Jelentkezz be!</a>
+      </div>
+
       {success && <p className="success">{success}</p>}
     </div>
   );
