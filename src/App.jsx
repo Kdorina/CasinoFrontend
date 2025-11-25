@@ -13,6 +13,8 @@ import Register from "./components/Register.jsx";
 import Home from "./components/Home.jsx";
 import Withdraw from "./components/Withdraw.jsx";
 import BuyToken from "./components/Buy/BuyToken.jsx";
+import CasinoMainPage from "./components/CasinoMainPage.jsx";
+
 
 function AppWrapper() {
   return (
@@ -26,51 +28,24 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation();
 
-  const showTitle =
-    location.pathname === "/" ||
-    location.pathname === "/login" ||
-    location.pathname === "/register";
+const showTitle =
+  location.pathname === "/login" ||
+  location.pathname === "/register";
 
-  const showMenu = location.pathname === "/";
+
+const showMenu = false;
 
   return (
     <div className="app-container">
 
-      {/* HEADER */}
-      <header className="app-header">
-
-        {/* CÍM */}
-        {showTitle && (
-          <h1 className="app-title">
-            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              Casino App
-            </Link>
-          </h1>
-        )}
-
-        {/* FŐOLDALI MENÜ */}
-        {showMenu && (
-          <nav className="nav">
-            <Link to="/register" className="nav-btn">Regisztráció</Link>
-            <Link to="/login" className="nav-btn">Bejelentkezés</Link>
-          </nav>
-        )}
-
-      </header>
-
+     
       {/* OLDALTARTALOM */}
       <main className="page-container">
         <Routes>
 
           {/* FŐOLDAL */}
-          <Route
-            path="/"
-            element={
-              <div style={{ padding: "30px" }}>
-                <h2>Válassz a fenti menüpontok közül.</h2>
-              </div>
-            }
-          />
+          <Route path="/" element={<CasinoMainPage />} />
+
 
           {/* LOGIN */}
           <Route
