@@ -1,0 +1,51 @@
+/* Teljes oldal */
+.home-wrapper {
+    width: 90vw;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;  /* fontos, hogy a jobbra igazítás működjön */
+  }
+  
+  /* JOBB FELSŐ SAROK DOBOZ */
+  .home-top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* <-- jobbra igazítja */
+    gap: 6px;
+  }
+  
+  /* Token és Ft megjelenítés */
+  .token-display,
+  .money-display {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1e3a5f;
+  }
+  
+  /* Kifizetés gomb */
+  .withdraw-btn {
+    background-color: #f4b400;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+  
+  .withdraw-btn:hover {
+    background-color: #d99a00;
+  }
+  
+  /* Központi üdvözlő szöveg */
+  .home-center {
+    margin-top: 180px; /* ne érjen össze a felső sávval */
+    text-align: center;
+    font-size: 22px;
+  }
+  

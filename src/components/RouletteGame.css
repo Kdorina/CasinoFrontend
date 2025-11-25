@@ -1,0 +1,468 @@
+.rg-root {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  background: #225a32;
+}
+
+/* teljes "gépdoboz" */
+.rg-cabinet {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  background: #0c3b2b;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.8);
+}
+
+/* bal oldali teal sáv history-val */
+.rg-side-rail {
+  width: 70px;
+  background: linear-gradient(#00485a, #003347);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 6px;
+}
+
+.rg-history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rg-history-item {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #555;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid #333;
+}
+
+.rg-his-red {
+  background: #b12525;
+}
+
+.rg-his-black {
+  background: #111;
+}
+
+.rg-his-green {
+  background: #0f7a33;
+}
+
+.rg-side-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rg-side-round {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #234863;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* fő panel (fa + zöld asztal) */
+
+.rg-main-panel {
+  flex: 1;
+  background: #185c31;
+  display: flex;
+  flex-direction: column;
+}
+
+/* fa fejléccel felül */
+
+.rg-top-wood {
+  height: 70px;
+  background: radial-gradient(circle at 10% 10%, #f5e3c4, #965c27);
+  border-bottom: 3px solid #c08a44;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 120px;
+  padding-bottom: 5px;
+}
+
+.rg-banner {
+  background: #c89b57;
+  color: #5a3a16;
+  border-radius: 50px 50px 0 0;
+  padding: 6px 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 13px;
+}
+
+/* alatt a két oldal: kerék + tábla */
+
+.rg-content-row {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+}
+
+/* bal oldal – kerék */
+
+.rg-left-panel {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* fa keret + zöld környezet */
+
+.rg-wheel-panel {
+  width: 100%;
+  background: #1a6b35;
+  border-radius: 180px;
+  padding: 10px 10px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.rg-wheel-inner {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 20% 20%, #f5e3c4, #b1722e);
+  padding: 10px;
+}
+
+.rg-wheel-shadow {
+  border-radius: 50%;
+  background: #1b7439;
+  padding: 12px;
+  position: relative;
+}
+
+.rg-wheel-img-wrapper {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.rg-wheel-img {
+  width: 100%;
+  display: block;
+}
+
+/* kis fehér golyó alul, pointert a kerék kép tartalmazza */
+
+.rg-ball {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* CLEAR / SPIN gombok */
+
+.rg-controls-row {
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.rg-circle-btn {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px solid #1ced71;
+  background: radial-gradient(circle at 30% 30%, #29b75a, #0c5a26);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 8px #000;
+}
+
+.rg-circle-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.rg-spin-btn {
+  border-color: #4cff4c;
+}
+
+.rg-clear-btn {
+  border-color: #b6ff4c;
+}
+
+/* chipek */
+
+.rg-chips-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.rg-chip {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: radial-gradient(circle at 30% 30%, #fff, #555);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rg-chip span {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #b12525;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.rg-chip-active span {
+  background: #0c8c3a;
+}
+
+/* státusz sor */
+
+.rg-status-row {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.rg-result-label {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* jobb oldal – tábla */
+
+.rg-right-panel {
+  flex: 0 0 55%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.rg-table-border {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 18px;
+  border: 3px solid #f0f0f0;
+  padding: 6px;
+  background: #0f6c34;
+}
+
+/* felső sor – 0 mező */
+
+.rg-table-top-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.rg-top-zero {
+  width: 60px;
+  text-align: center;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  background: #0b8a46;
+  font-weight: bold;
+  padding: 4px 0;
+}
+
+/* fő rács */
+
+.rg-table-main {
+  display: grid;
+  grid-template-columns: 70px 1fr 60px;
+  gap: 4px;
+}
+
+/* bal oldali outside */
+
+.rg-outside-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rg-outside-slot {
+  flex: 1;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  text-align: center;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* középső számrács */
+
+.rg-numbers-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rg-numbers-row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2px;
+}
+
+.rg-table-cell {
+  position: relative;
+  height: 26px;
+  border-radius: 14px;
+  border: 1px solid #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.rg-cell-zero {
+  background: #0b8a46;
+}
+
+.rg-cell-red {
+  background: #b12525;
+}
+
+.rg-cell-black {
+  background: #111;
+}
+
+.rg-cell-number {
+  color: #fff;
+}
+
+.rg-cell-bet {
+  position: absolute;
+  bottom: 1px;
+  right: 4px;
+  font-size: 9px;
+  background: #ffe680;
+  color: #000;
+  padding: 0 3px;
+  border-radius: 4px 0 0 0;
+}
+
+/* jobb oldali 1st/2nd/3rd label */
+
+.rg-side-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rg-side-label {
+  flex: 1;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* alsó even/red/black/odd */
+
+.rg-bottom-row {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.rg-bottom-slot {
+  border-radius: 10px;
+  border: 2px solid #fff;
+  text-align: center;
+  padding: 4px 0;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.rg-bottom-red {
+  background: #b12525;
+}
+
+.rg-bottom-black {
+  background: #111;
+}
+
+/* RESPONSIVE – iPhone 15 Pro landscape + kisebb */
+
+@media (max-width: 900px) {
+  .rg-cabinet {
+    flex-direction: column;
+  }
+
+  .rg-side-rail {
+    flex-direction: row;
+    width: 100%;
+    height: 70px;
+    align-items: center;
+  }
+
+  .rg-history {
+    flex-direction: row;
+  }
+
+  .rg-side-buttons {
+    flex-direction: row;
+    margin-left: auto;
+  }
+
+  .rg-top-wood {
+    padding-left: 80px;
+  }
+
+  .rg-content-row {
+    flex-direction: column;
+  }
+
+  .rg-left-panel,
+  .rg-right-panel {
+    flex: none;
+    width: 100%;
+  }
+
+  .rg-left-panel {
+    align-items: center;
+  }
+
+  .rg-status-row {
+    justify-content: center;
+  }
+}

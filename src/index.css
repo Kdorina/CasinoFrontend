@@ -17,6 +17,7 @@ a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
+  margin-right: 15px;
 }
 a:hover {
   color: #535bf2;
@@ -28,8 +29,24 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  justify-content: center;
+}
+/* Minden oldal tartalma legyen középen */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 30px;
 }
 
+/* Cím középre */
+.app-title {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 20px 0;
+}
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -63,6 +80,16 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: green;
   }
+}
+
+.app-header{
+  text-align: center;
+}
+.casino-title {
+  font-size: 25px;
+  font-weight: bold;
+  color: #1e3a5f;
+  margin-bottom: 20px;
 }
