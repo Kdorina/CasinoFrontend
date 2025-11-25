@@ -1,33 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  Link,
+  BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
+  Navigate,
+  Link,
   useLocation,
 } from "react-router-dom";
 
-import Register from "./components/Register";
-import Withdraw from "./components/Withdraw";
-import Home from "./components/Home";
-import "./index.css";
+import LoginPage from "./components/Login/LoginPage.jsx";
+import Register from "./components/Register.jsx";
+import Home from "./components/Home.jsx";
+import Withdraw from "./components/Withdraw.jsx";
+import BuyToken from "./components/Buy/BuyToken.jsx";
+
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
 
 function App() {
-  const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation();
 
-  // Csak ezeken az oldalakon jelenik meg a Cím + Menü:
-  const showMenu = location.pathname === "/";
   const showTitle =
     location.pathname === "/" ||
-    location.pathname === "/register" ||
-    location.pathname === "/login";
+    location.pathname === "/login" ||
+    location.pathname === "/register";
+
+  const showMenu = location.pathname === "/";
 
   return (
     <div className="app-container">
+
+      {/* HEADER */}
       <header className="app-header">
 
-        {/* Csak itt mutatjuk a címet */}
+        {/* CÍM */}
         {showTitle && (
           <h1 className="app-title">
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
@@ -36,7 +48,7 @@ function App() {
           </h1>
         )}
 
-        {/* Menü CSAK a / főoldalon */}
+        {/* FŐOLDALI MENÜ */}
         {showMenu && (
           <nav className="nav">
             <Link to="/register" className="nav-btn">Regisztráció</Link>
@@ -46,10 +58,11 @@ function App() {
 
       </header>
 
+      {/* OLDALTARTALOM */}
       <main className="page-container">
         <Routes>
 
-          {/* Főoldal */}
+          {/* FŐOLDAL */}
           <Route
             path="/"
             element={
@@ -59,30 +72,47 @@ function App() {
             }
           />
 
-          {/* Regisztráció */}
-          <Route
-            path="/register"
-            element={
-              <Register onRegisterSuccess={() => navigate("/home")} />
-            }
-          />
-
-          {/* Bejelentkezés */}
+          {/* LOGIN */}
           <Route
             path="/login"
             element={
-              <div className="card">
-                <h2>Bejelentkezés</h2>
-                <p>Ezt a részt a csapattársad csinálta.</p>
-              </div>
+              loggedIn ?
+                <Navigate to="/home" /> :
+                <LoginPage onLoginSuccess={() => setLoggedIn(true)} />
             }
           />
 
-          {/* Home */}
-          <Route path="/home" element={<Home />} />
+          {/* REGISTER */}
+          <Route
+            path="/register"
+            element={
+              <Register onRegisterSuccess={() => setLoggedIn(true)} />
+            }
+          />
 
-          {/* Kifizetés */}
-          <Route path="/withdraw" element={<Withdraw />} />
+          {/* HOME */}
+          <Route
+            path="/home"
+            element={
+              loggedIn ? <Home /> : <Navigate to="/login" />
+            }
+          />
+
+          {/* TOKEN VÁSÁRLÁS */}
+          <Route
+            path="/buytoken"
+            element={
+              loggedIn ? <BuyToken /> : <Navigate to="/login" />
+            }
+          />
+
+          {/* KIFIZETÉS */}
+          <Route
+            path="/withdraw"
+            element={
+              loggedIn ? <Withdraw /> : <Navigate to="/login" />
+            }
+          />
 
           {/* 404 */}
           <Route
@@ -92,8 +122,9 @@ function App() {
 
         </Routes>
       </main>
+
     </div>
   );
 }
 
-export default App;
+export default AppWrapper;
