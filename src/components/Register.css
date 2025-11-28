@@ -1,3 +1,8 @@
+
+
+/* ============================== */
+/*        LIGHT MODE (ALAP)      */
+/* ============================== */
 .register-container {
     width: 95%;
     max-width: 700px;
@@ -10,15 +15,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-  
-h2 {
-    text-align: center;
-    color: #222;
-    margin-bottom: 20px;
-  }
-  
-  .form-grid {
+}
+.form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px 20px;
@@ -36,17 +34,27 @@ h2 {
     gap: 20px;
   }
   
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="date"],
-  input[type="file"] {
+
+/* Alap világos szöveg */
+.register-container h2 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 20px;
+}
+
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"],
+.register-container input[type="date"],
+.register-container input[type="file"] {
     padding: 8px;
     border: 1px solid #ccc;
+    background: white;
     border-radius: 5px;
-  }
-  
-  button {
+    color: #222;
+}
+
+.register-container button {
     width: 100%;
     background-color: #007bff;
     color: white;
@@ -56,36 +64,74 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s;
     margin-top: 25px;
-  }
-  
-  button:hover {
+}
+
+.register-container button:hover {
     background-color: #0056b3;
-  }
-  
-  .error {
+}
+
+.register-container .error {
     color: red;
-    font-size: 0.85em;
-  }
-  
-  .success {
+}
+
+.register-container .success {
     color: green;
-    text-align: center;
+}
+
+.register-container .login-link a {
+    color: #007bff;
     font-weight: bold;
-    margin-top: 20px;
+    text-decoration: none;
+}
+
+
+/* ============================== */
+/*        DARK MODE (AUTO)       */
+/* ============================== */
+@media (prefers-color-scheme: dark) {
+  .register-container {
+      background: #1e1e1e;
+      border: 1px solid #444;
+      color: white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
   }
 
-  .login-link {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-}
+  .register-container h2 {
+      color: #ffffff;
+  }
 
-.login-link a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-}
+  .register-container input[type="text"],
+  .register-container input[type="email"],
+  .register-container input[type="password"],
+  .register-container input[type="date"],
+  .register-container input[type="file"] {
+      background: #2a2a2a;
+      border: 1px solid #555;
+      color: white;
+  }
 
-.login-link a:hover {
-  text-decoration: underline;
+  .register-container input::placeholder {
+      color: #aaaaaa;
+  }
+
+  .register-container button {
+      background-color: #4d8aff;
+      color: black;
+  }
+
+  .register-container button:hover {
+      background-color: #3d74d6;
+  }
+
+  .register-container .login-link a {
+      color: #4d8aff;
+  }
+
+  .register-container .error {
+      color: #ff6b6b;
+  }
+
+  .register-container .success {
+      color: #7aff7a;
+  }
 }

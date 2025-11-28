@@ -8,12 +8,11 @@ function CasinoMainPage() {
       {/* NAVBAR FELSŐ */}
       <nav className="casino-navbar">
         <a className="casino-brand" href="/">Casino.hu</a>
-        <a href="#blackjack">Blackjack</a>
-        <a href="#roulette">Roulette</a>
-        <a href="#ai-blackjack">AI.Blackjack</a>
-        <a href="#ai-roulette">AI.Roulette</a>
-        <a className="login-btn" href="/login">Belépés</a>
+        
+        <div>
         <a className="register-btn" href="/register">Regisztráció</a>
+        <a className="login-btn" href="/login">Bejelentkezés</a>
+        </div>
       </nav>
 
      
@@ -21,7 +20,7 @@ function CasinoMainPage() {
       {/* SLIDER */}
       <div className="slider-box">
         <img
-          src="/img/casino-bg.webp"
+          src="/img/closeup-roulette-wheel-action-neon-lights-illuminating-scene-with-blurred-crowd-background – nagy.jpeg"
           className="slider-image"
         />
       </div>
@@ -31,13 +30,20 @@ function CasinoMainPage() {
 
       {/* ROULETTE KATEGÓRIA */}
       <div className="category-box">
-        <h2 className="cat-title">Roulette</h2>
+         <img
+          src="/img/Rulett.png"
+          className="roulette-image"
+        />
        
       </div>
 
       {/* BLACKJACK KATEGÓRIA */}
       <div className="category-box">
-        <h2 className="cat-title">Black Jack</h2>
+        <img
+          src="/img/blackjack.png"
+          className="blackjack-image"
+        />
+  
         
       </div>
       </div>

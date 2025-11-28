@@ -1,7 +1,7 @@
 /* === TELJES HÁTTÉR === */
 .casino-wrapper {
   width: 100%;
-  background: #0b6623; /* Kaszinó zöld */
+  background: #175E3B; /* Kaszinó zöld */
   padding: 0;
   margin: 0;
   display: flex;
@@ -12,13 +12,12 @@
 /* === NAVBAR === */
 .casino-navbar {
   width: 90%;
-  background: #d8b56a;
+  background: black;
   margin-top: 20px;
   padding: 15px;
   border-radius: 15px;
-  border: 3px solid #8a5b20;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -27,7 +26,7 @@
   font-size: 20px;
   font-weight: bold;
   padding: 8px 20px;
-  color: black;
+  color: white;
 }
 
 .casino-navbar a:hover {
@@ -37,13 +36,12 @@
 
 /* === Loginnál legyen más szín === */
 .login-btn {
-  background: #8a5b20;
+  background: white;
   padding: 10px 20px;
-  color: white !important;
+  color: black !important;
   border-radius: 12px;
 }
 .register-btn {
-  background: #8a5b20;
   padding: 10px 20px;
   color: white !important;
   border-radius: 12px;
@@ -61,7 +59,20 @@
   height: 300px;
   object-fit: cover;
   border-radius: 12px;
-  border: 3px solid #8a5b20;
+}
+
+.roulette-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.blackjack-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 .game-holder{
@@ -75,11 +86,9 @@ gap:20px
 
 .category-box {
   width: 100%;
-  background: #d8b56a;
-  margin-top: 30px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 0px;
   border-radius: 15px;
-  border: 3px solid #8a5b20;
 }
 
 .cat-title {

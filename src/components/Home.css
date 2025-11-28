@@ -1,51 +1,86 @@
-/* Teljes oldal */
+/* Teljes oldal háttér */
 .home-wrapper {
-    width: 90vw;
-    min-height: 100vh;
-    padding: 20px;
-    position: relative;  /* fontos, hogy a jobbra igazítás működjön */
-  }
-  
-  /* JOBB FELSŐ SAROK DOBOZ */
-  .home-top-right {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* <-- jobbra igazítja */
-    gap: 6px;
-  }
-  
-  /* Token és Ft megjelenítés */
-  .token-display,
-  .money-display {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1e3a5f;
-  }
-  
-  /* Kifizetés gomb */
-  .withdraw-btn {
-    background-color: #f4b400;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-  }
-  
-  .withdraw-btn:hover {
-    background-color: #d99a00;
-  }
-  
-  /* Központi üdvözlő szöveg */
-  .home-center {
-    margin-top: 180px; /* ne érjen össze a felső sávval */
-    text-align: center;
-    font-size: 22px;
-  }
-  
+  padding: 10px;
+}
+
+/* NAVBAR */
+.home-navbar {
+  width: 90%;
+  background: black;
+  padding:10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  margin:0px auto;
+}
+
+/* Bal oldal */
+.home-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-navbar-icon {
+  color: white;
+  font-size: 22px;
+}
+
+.home-navbar-title {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Jobb oldal */
+.home-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Logout gomb */
+.home-logout-btn {
+  padding: 8px 16px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+.home-logout-btn:hover {
+  opacity: 0.8;
+}
+
+/* Token kapszula */
+.home-token-pill {
+  background: #dcff62;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* Avatar */
+.home-avatar {
+  width: 45px;
+  height: 45px;
+  background: #d8d8d8;
+  border-radius: 50%;
+}
+
+/* Tartalom */
+.home-content {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.home-content h2 {
+  color: white;
+}
+.home-content p {
+  color: #cccccc;
+  margin-top: 8px;
+}

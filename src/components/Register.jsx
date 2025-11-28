@@ -104,7 +104,9 @@ const Register = () => {
   };
 
   return (
+
     <div className="register-container">
+      
       <h2>Regisztráció</h2>
 
       <form onSubmit={handleSubmit}>
