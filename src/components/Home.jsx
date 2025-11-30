@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../context/TokenContext";
 import "./Home.css";
-import RouletteGame from "../components/RouletteGame";   // ← EZT ADD HOZZÁ
+//import RouletteGame from "./RouletteGame";   // ← EZT ADD HOZZÁ
 
 const Home = () => {
   const navigate = useNavigate();
