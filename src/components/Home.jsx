@@ -1,31 +1,47 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../context/TokenContext";
 import "./Home.css";
-//import RouletteGame from "./RouletteGame";   // ← EZT ADD HOZZÁ
 
-const Home = () => {
+const Home = ({ onLogout }) => {
   const navigate = useNavigate();
-  const { tokens, balanceFt } = useContext(TokenContext);
+  const { tokens } = useContext(TokenContext);
 
   return (
     <div className="home-wrapper">
 
-      {/* JOBB FELSŐ SAROK */}
-      <div className="home-top-right">
-        <div className="token-display">Tokenek: <strong>{tokens}</strong></div>
-        <div className="money-display">Ft egyenleg: <strong>{balanceFt} Ft</strong></div>
-        <button className="withdraw-btn" onClick={() => navigate("/withdraw")}>
-          💸 Kifizetés
-        </button>
+      {/* Új NAVBAR a kép alapján */}
+      <div className="home-navbar">
+
+        {/* Bal oldal: ikon + Casino */}
+        <div className="home-navbar-left">
+          <span className="home-navbar-icon">✴</span>
+          <span className="home-navbar-title">Casino</span>
+        </div>
+
+        {/* Jobb oldal */}
+        <div className="home-navbar-right">
+          
+          <button 
+            className="home-logout-btn" 
+            onClick={onLogout}
+          >
+            Kijelentkezem
+          </button>
+
+          <div className="home-token-pill">
+            {tokens} token
+          </div>
+
+          <div className="home-avatar"></div>
+        </div>
+
       </div>
 
-      {/* Központi üdvözlés */}
-      <div className="home-center">
+      {/* HOME tartalom */}
+      <div className="home-content">
         <h2>Üdvözlünk a Casino App-ban!</h2>
-
-        {/* IDE KERÜL A RULETT */}
-        <RouletteGame />
+        <p>Válassz játékot a fenti menüből, vagy kezdd a tokenek kezelésével.</p>
       </div>
 
     </div>

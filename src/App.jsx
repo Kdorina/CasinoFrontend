@@ -46,7 +46,6 @@ const showMenu = false;
           {/* FŐOLDAL */}
           <Route path="/" element={<CasinoMainPage />} />
 
-
           {/* LOGIN */}
           <Route
             path="/login"
@@ -65,13 +64,20 @@ const showMenu = false;
             }
           />
 
-          {/* HOME */}
-          <Route
+          {/* test route <Route path="/home" element={<Home />} />*/}
+
+
+      <Route
             path="/home"
             element={
-              loggedIn ? <Home /> : <Navigate to="/login" />
+              loggedIn ? (
+                <Home onLogout={() => setLoggedIn(false)} />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
+
 
           {/* TOKEN VÁSÁRLÁS */}
           <Route
@@ -94,6 +100,8 @@ const showMenu = false;
             path="*"
             element={<h2 style={{ padding: "30px" }}>Az oldal nem található.</h2>}
           />
+
+          
 
         </Routes>
       </main>
