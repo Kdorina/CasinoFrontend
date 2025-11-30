@@ -1,6 +1,10 @@
 /* Teljes oldal háttér */
 .home-wrapper {
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* NAVBAR */

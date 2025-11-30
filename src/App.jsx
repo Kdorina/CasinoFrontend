@@ -64,10 +64,10 @@ const showMenu = false;
             }
           />
 
-          {/* test route <Route path="/home" element={<Home />} />*/}
+           test route <Route path="/home" element={<Home />} />
 
 
-      <Route
+     {/* <Route
             path="/home"
             element={
               loggedIn ? (
@@ -76,7 +76,7 @@ const showMenu = false;
                 <Navigate to="/login" />
               )
             }
-          />
+          />*/}
 
 
           {/* TOKEN VÁSÁRLÁS */}
