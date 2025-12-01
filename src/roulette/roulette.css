@@ -1,0 +1,245 @@
+/* ======= GLOBAL ROOT LAYOUT ======= */
+
+.roulette-root {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  background: radial-gradient(circle, #1b5e20, #0a3013);
+  color: #fff;
+  min-height: 100vh;
+}
+
+.left-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* ======= SPIN BUTTON ======= */
+
+.spin-button {
+  margin-top: 25px;
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background: #f9ce46;
+  color: #222;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.spin-button:hover {
+  background: #ffe083;
+}
+
+
+/* ======= WHEEL DESIGN ======= */
+
+.wheel-container {
+  width: 320px;
+  height: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wheel-outer {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, #c49d48, #8b6f2e);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5),
+              0 0 20px rgba(0,0,0,0.8);
+}
+
+.wheel-middle {
+  width: 260px;
+  height: 260px;
+  background: #4e342e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wheel-inner {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #f0e6c8, #d6c495);
+  border-radius: 50%;
+  position: relative;
+}
+
+.wheel-center {
+  width: 60px;
+  height: 60px;
+  background: #bfa45e;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 30px);
+  left: calc(50% - 30px);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.winning-number {
+  position: absolute;
+  bottom: -40px;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+
+/* ======= RIGHT SIDE LAYOUT ======= */
+
+.right-side {
+  flex: 2;
+}
+
+
+/* ======= TABLE ======= */
+
+.table-container {
+  background: #0f4d1c;
+  padding: 15px;
+  border-radius: 15px;
+  border: 3px solid #fff;
+}
+
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 6px;
+}
+
+.table-field {
+  height: 50px;
+  border-radius: 10px;
+  border: 1px solid #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.table-field.green {
+  background: #0a8f0f;
+}
+
+.table-field.red {
+  background: #b40000;
+}
+
+.table-field.black {
+  background: #111;
+}
+
+
+/* BOT CHIP */
+
+.bot-chip {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #ffd700;
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  animation: chip-drop 0.3s ease-out;
+}
+
+@keyframes chip-drop {
+  from {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+/* ======= ZSETON SOR ======= */
+
+.chips-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.chip {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+
+/* ======= CHAT ======= */
+
+.chat-box {
+  margin-top: 20px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  border-radius: 12px;
+  height: 260px;
+  overflow-y: auto;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.msg {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.msg.system {
+  background: rgba(255,255,255,0.2);
+  font-style: italic;
+  text-align: center;
+}
+
+.msg.bot {
+  background: rgba(255, 152, 0, 0.4);
+}
+
+.msg.you {
+  background: rgba(33, 150, 243, 0.4);
+}
+
+
+/* ======= RESPONSIVE ======= */
+
+@media(max-width: 900px) {
+  .roulette-root {
+    flex-direction: column;
+  }
+
+  .left-side,
+  .right-side {
+    width: 100%;
+  }
+
+  .fields-grid {
+    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+  }
+}

@@ -14,6 +14,10 @@ import Home from "./components/Home.jsx";
 import Withdraw from "./components/Withdraw.jsx";
 import BuyToken from "./components/Buy/BuyToken.jsx";
 import CasinoMainPage from "./components/CasinoMainPage.jsx";
+import RouletteGame from "./roulette/RouletteGame.jsx";
+import BotGame from "./components/BotGame.jsx";
+
+
 
 
 function AppWrapper() {
@@ -64,7 +68,8 @@ const showMenu = false;
             }
           />
 
-           test route <Route path="/home" element={<Home />} />
+          {/* test route */}
+        <Route path="/home" element={<Home />} />
 
 
      {/* <Route
@@ -77,7 +82,9 @@ const showMenu = false;
               )
             }
           />*/}
-
+      {/* RULETT OLDALAK */}
+          <Route path="/roulette" element={<RouletteGame />} />
+          <Route path="/bot-demo" element={<BotGame />} />
 
           {/* TOKEN VÁSÁRLÁS */}
           <Route
