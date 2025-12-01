@@ -4,6 +4,24 @@
   text-align: center;
 }
 
+/* Desktop */
+.site-nav__link[href="/collections/adventi-kalendarium"] {
+    background-color: #c70000 !important;
+    color: #ffffff !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* Hover */
+.site-nav__link[href="/collections/adventi-kalendarium"]:hover {
+    background-color: #a60000 !important;
+}
+
+/* Mobile */
+.mobile-site-nav__link[href="/collections/adventi-kalendarium"] {
+    background-color: #c70000 !important;
+    color: #ffffff !important;
+}
 
 .logo {
   height: 6em;

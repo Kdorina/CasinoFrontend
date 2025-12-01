@@ -1,42 +1,85 @@
-// src/bot/useBotConnection.jsx
-import { useEffect } from "react";
+// bot/useBotConnection.jsx
+import { useState, useCallback } from "react";
 
-export default function useBotConnection(onEvent) {
-  useEffect(() => {
-    let joined = false;
-    let left = false;
+export default function useBotConnection({ onBotBet, onBotMessage, onBotLeave }) {
+  const [bot, setBot] = useState(null);
 
-    const interval = setInterval(() => {
-      if (!joined) {
-        onEvent({ type: "bot_join", playerId: "bot-1" });
-        joined = true;
-        return;
+  const getRandomAmount = () => Math.floor(Math.random() * 91) + 10; // 10–100
+
+  // 35% eséllyel csatlakozik a kör elején
+  const maybeJoin = useCallback(() => {
+    if (bot) return false;
+
+    const shouldJoin = Math.random() < 0.35;
+    if (!shouldJoin) return false;
+
+    const newBot = {
+      id: "roulette-bot",
+      name: "Casino Bot",
+      inGame: true,
+    };
+
+    setBot(newBot);
+    return true;
+  }, [bot]);
+
+  // Rulett tét
+  const placeRouletteBet = useCallback(() => {
+    if (!bot) return;
+
+    const amount = getRandomAmount();
+    const colors = ["red", "black"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    const bet = {
+      playerId: "bot",
+      amount,
+      betType: "color",
+      value: color,
+    };
+
+    onBotBet(bet);
+  }, [bot, onBotBet]);
+
+  // Kör végi logika
+  const handleRoundResult = useCallback(
+    (botWon) => {
+      if (!bot) return;
+
+      let shouldLeave = false;
+      let reason = null;
+
+      // Ha nyert → 50% üzen, 50% kilép
+      if (botWon) {
+        if (Math.random() < 0.5) {
+          const msgs = ["Nyertem!", "Gazdag vagyok!", "Megyek Hollywoodba!"];
+          onBotMessage(msgs[Math.floor(Math.random() * msgs.length)]);
+        }
+
+        if (Math.random() < 0.5) {
+          shouldLeave = true;
+        }
       }
 
-      if (left) return;
-
-      const r = Math.random();
-
-      if (r < 0.45) {
-        // bot tesz tétet → 0–36
-        const field = Math.floor(Math.random() * 37);
-        onEvent({
-          type: "bot_bet",
-          playerId: "bot-1",
-          bet: { fieldId: field, amount: 10 }
-        });
+      // Minden körben 10% eséllyel "Mindent elvesztettem"
+      if (!shouldLeave && Math.random() < 0.1) {
+        shouldLeave = true;
+        reason = "Mindent elvesztettem";
       }
 
-      else if (r < 0.7) {
-        onEvent({ type: "bot_win", playerId: "bot-1" });
+      if (shouldLeave) {
+        setBot(null);
+        onBotLeave(reason);
       }
+    },
+    [bot, onBotLeave, onBotMessage]
+  );
 
-      else {
-        onEvent({ type: "bot_leave", playerId: "bot-1" });
-        left = true;
-      }
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [onEvent]);
+  return {
+    bot,
+    isBotPresent: !!bot,
+    maybeJoin,
+    placeRouletteBet,
+    handleRoundResult,
+  };
 }

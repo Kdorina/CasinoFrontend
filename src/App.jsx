@@ -16,7 +16,7 @@ import BuyToken from "./components/Buy/BuyToken.jsx";
 import CasinoMainPage from "./components/CasinoMainPage.jsx";
 import RouletteGame from "./roulette/RouletteGame.jsx";
 import BotGame from "./components/BotGame.jsx";
-
+import BlackJack from "./components/BlackJack/BlackJack.jsx";
 
 
 
@@ -41,7 +41,7 @@ const showMenu = false;
 
   return (
     <div className="app-container">
-
+      
      
       {/* OLDALTARTALOM */}
       <main className="page-container">
@@ -85,6 +85,7 @@ const showMenu = false;
       {/* RULETT OLDALAK */}
           <Route path="/roulette" element={<RouletteGame />} />
           <Route path="/bot-demo" element={<BotGame />} />
+            <Route path="/blackjack" element={<BlackJack />} />
 
           {/* TOKEN VÁSÁRLÁS */}
           <Route

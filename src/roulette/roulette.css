@@ -1,245 +1,403 @@
-/* ======= GLOBAL ROOT LAYOUT ======= */
+/* ----------- PORTRAIT OVERLAY ----------- */
+.rotate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 10, 10, 0.95);
+  color: #ffd700;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* ----------- LANDSCAPE RESPONSIVE SCALE ----------- */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .roulette-responsive-wrapper {
+    transform: scale(0.78);
+    transform-origin: top left;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+  }
+}
+
+@media screen and (max-height: 420px) and (orientation: landscape) {
+  .roulette-responsive-wrapper {
+    transform: scale(0.65);
+  }
+}
+
+@media screen and (max-height: 360px) and (orientation: landscape) {
+  .roulette-responsive-wrapper {
+    transform: scale(0.55);
+  }
+}
+
+/* ------- Global Layout ------- */
+.rotate-screen-warning {
+  width: 100vw;
+  height: 100vh;
+  background: #111;
+  color: #ffd700;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
 
 .roulette-root {
   display: flex;
-  gap: 30px;
-  padding: 20px;
-  background: radial-gradient(circle, #1b5e20, #0a3013);
-  color: #fff;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px;
+  gap: 40px;
+  background: radial-gradient(circle, #0b4a1f, #063015);
   min-height: 100vh;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
 .left-side {
-  flex: 1;
+  width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-
-/* ======= SPIN BUTTON ======= */
+.balance-box {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
 
 .spin-button {
-  margin-top: 25px;
-  padding: 12px 24px;
-  font-size: 18px;
-  border: none;
+  background: #ffcc00;
+  padding: 12px 30px;
   border-radius: 10px;
-  background: #f9ce46;
-  color: #222;
-  cursor: pointer;
+  border: none;
+  font-size: 20px;
   font-weight: bold;
-  transition: 0.2s;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
-.spin-button:hover {
-  background: #ffe083;
+.spin-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
+.info-msg {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #eee;
+}
 
-/* ======= WHEEL DESIGN ======= */
+/* ------- Roulette Wheel ------- */
 
 .wheel-container {
-  width: 320px;
-  height: 320px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.wheel-outer {
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, #c49d48, #8b6f2e);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5),
-              0 0 20px rgba(0,0,0,0.8);
-}
-
-.wheel-middle {
   width: 260px;
   height: 260px;
-  background: #4e342e;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.wheel-inner {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, #f0e6c8, #d6c495);
-  border-radius: 50%;
+  overflow: hidden;
   position: relative;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.7);
 }
 
-.wheel-center {
-  width: 60px;
-  height: 60px;
-  background: #bfa45e;
+.wheel-image.spinning {
+  animation: wheelspin 4s linear;
+}
+
+.spin {
+  animation: spinAnimation 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes wheelspin {
+  from { rotate: 0deg; }
+  to   { rotate: 360deg; }
+}
+
+/* --- REALISTIC POINTER --- */
+.wheel-pointer {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 22px solid white;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* --- KERÉK FIZIKAI PÖRGÉS --- */
+.spin-physics {
+  animation: spinPhysics 4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes spinPhysics {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(var(--finalAngle)); }
+}
+
+/* ------- TABLE CONTAINER ------- */
+
+.roulette-table {
+  width: 780px;
+  border: 4px solid white;
+  border-radius: 20px;
+  padding: 20px;
+  background-color: #05441c;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+.chip-on-cell {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  position: absolute;
-  top: calc(50% - 30px);
-  left: calc(50% - 30px);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.winning-number {
-  position: absolute;
-  bottom: -40px;
-  width: 100%;
-  text-align: center;
+  border: 4px solid #fff;
   font-weight: bold;
-  font-size: 20px;
-}
-
-
-/* ======= RIGHT SIDE LAYOUT ======= */
-
-.right-side {
-  flex: 2;
-}
-
-
-/* ======= TABLE ======= */
-
-.table-container {
-  background: #0f4d1c;
-  padding: 15px;
-  border-radius: 15px;
-  border: 3px solid #fff;
-}
-
-.fields-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 6px;
-}
-
-.table-field {
-  height: 50px;
-  border-radius: 10px;
-  border: 1px solid #fff;
+  font-size: 12px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+/* Színes kaszinóchipek */
+.chip-black { background: #000; }
+.chip-blue  { background: #0066ff; }
+.chip-green { background: #00aa44; }
+.chip-red   { background: #e92e2e; }
+.chip-purple { background: #7a2be2; }
+
+
+/* ------- ZERO + GRID ------- */
+
+.table-numbers {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.zero {
+  width: 60px;
+  background: green;
+  border: 2px solid white;
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
 }
 
-.table-field.green {
-  background: #0a8f0f;
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 60px);
+  grid-auto-rows: 50px;
+  gap: 5px;
 }
 
-.table-field.red {
-  background: #b40000;
+.cell {
+  border: 2px solid white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
 }
 
-.table-field.black {
-  background: #111;
+.cell span {
+  z-index: 2;
 }
 
+/* ------- COLORS ------- */
 
-/* BOT CHIP */
+.red {
+  background: #c62828;
+}
 
-.bot-chip {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  background: #ffd700;
+.black {
+  background: #212121;
+}
+
+.green {
+  background: #1b5e20 !important;
+}
+
+/* ------- Chip indicator ------- */
+
+.chip-indicator {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
-  animation: chip-drop 0.3s ease-out;
+  bottom: -10px;
+  right: -10px;
+  background: gold;
+  border: 2px solid black;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-@keyframes chip-drop {
-  from {
-    transform: translateY(-12px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-
-/* ======= ZSETON SOR ======= */
+/* --------- CHIPS --------- */
 
 .chips-row {
   display: flex;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 20px;
+
 }
 
 .chip {
-  width: 48px;
-  height: 48px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 4px solid #eee;
+  border: 4px solid white;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-
-/* ======= CHAT ======= */
-
-.chat-box {
-  margin-top: 20px;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 15px;
-  border-radius: 12px;
-  height: 260px;
-  overflow-y: auto;
+.chip:hover {
+  transform: scale(1.12);
+  box-shadow: 0 8px 14px rgba(0,0,0,0.5);
 }
 
-.chat-messages {
+.chip.selected-chip {
+  box-shadow: 0 0 15px yellow;
+  transform: scale(1.18);
+}
+
+/* Chip Colors */
+.chip.black {
+  background: #000;
+  color: white;
+}
+
+.chip.blue {
+  background: #1976d2;
+}
+
+.chip.green {
+  background: #43a047;
+}
+
+.chip.red {
+  background: #e53935;
+}
+
+.chip.purple {
+  background: #8e24aa;
+}
+
+.chip-and-clear {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
 }
 
-.msg {
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 14px;
+.total-bet-side {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffd700;
+  padding-left: 4px;
 }
 
-.msg.system {
-  background: rgba(255,255,255,0.2);
-  font-style: italic;
-  text-align: center;
+/* ------- Törlés gomb ------- */
+.clear-button {
+  background: #444;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #777;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.msg.bot {
-  background: rgba(255, 152, 0, 0.4);
+.clear-button:hover {
+  background: #666;
 }
 
-.msg.you {
-  background: rgba(33, 150, 243, 0.4);
+.clear-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
+/* ------- Columns Row (2 TO 1) ------- */
 
-/* ======= RESPONSIVE ======= */
+.columns-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 15px;
+}
 
-@media(max-width: 900px) {
-  .roulette-root {
-    flex-direction: column;
-  }
+.col-bet {
+  background: #0d4622;
+  color: white;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 17px;
+}
 
-  .left-side,
-  .right-side {
-    width: 100%;
-  }
+/* ------- Dozens Row ------- */
 
-  .fields-grid {
-    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
-  }
+.dozens-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.dozens-row .cell {
+  background: #0b5425;
+  height: 50px;
+  font-size: 18px;
+}
+
+/* ------- Outside Bets Row ------- */
+
+.outside-bets-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.outside {
+  height: 50px;
+  font-size: 18px;
+}
+
+.outside.red {
+  background: red !important;
+}
+
+.outside.black {
+  background: black !important;
 }

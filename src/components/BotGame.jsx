@@ -34,11 +34,12 @@ export default function BotGame() {
         break;
 
       case "bot_bet":
-        setBot((prev) => ({
-          ...prev,
-          bets: event.bets,
-        }));
-        break;
+      setBot((prev) => ({
+        ...prev,
+        bets: [...prev.bets, event.bet] 
+      }));
+      break;
+
 
       case "bot_win": {
         const msg =

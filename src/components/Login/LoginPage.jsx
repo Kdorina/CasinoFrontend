@@ -53,21 +53,35 @@ const handleVerify = () => {
       }}>
         <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Bejelentkezés</h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ marginBottom: '10px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
-        />
+<input
+  type="email"
+  placeholder="Email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  style={{
+    marginBottom: '10px',
+    padding: '8px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    backgroundColor: 'white',
+    color: 'black'
+  }}
+/>
 
-        <input
-          type="password"
-          placeholder="Jelszó"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ marginBottom: '10px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
-        />
+<input
+  type="password"
+  placeholder="Jelszó"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  style={{
+    marginBottom: '10px',
+    padding: '8px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    backgroundColor: 'white',
+    color: 'black'
+  }}
+/>
 
         {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
 
@@ -86,31 +100,41 @@ const handleVerify = () => {
         </button>
       </form>
 
-      <Modal
-        isOpen={is2FAOpen}
-        onRequestClose={() => setIs2FAOpen(false)}
-        style={{
-          content: {
-            width: '300px',
-            height: '200px',
-            margin: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0,0,0,0.3)'
-          }
-        }}
-      >
-        <h3>Kétfaktoros hitelesítés</h3>
-        <input
-          type="text"
-          placeholder="Írd be a 6 számjegyű kódot"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          style={{ margin: '10px 0', padding: '8px', borderRadius: '5px', border: '1px solid #0e0101ff' }}
-        />
+<Modal
+  isOpen={is2FAOpen}
+  onRequestClose={() => setIs2FAOpen(false)}
+  style={{
+    content: {
+      width: '300px',
+      height: '200px',
+      margin: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: '10px',
+      boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+      backgroundColor: 'white',
+      color: 'black'
+    }
+  }}
+>
+
+        <h3 style={{ textAlign: 'center', marginBottom: '20px' }}>Kétfaktoros hitelesítés</h3>
+  <input
+  type="text"
+  placeholder="Írd be a 6 számjegyű kódot"
+  value={code}
+  onChange={(e) => setCode(e.target.value)}
+  style={{
+    margin: '10px 0',
+    padding: '8px',
+    borderRadius: '5px',
+    border: '1px solid #0e0101ff',
+    backgroundColor: 'white',
+    color: 'black'
+  }}
+/>
         <button onClick={handleVerify} style={{
           padding: '8px 15px',
           backgroundColor: '#28a745',
