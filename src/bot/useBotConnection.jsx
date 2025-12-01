@@ -1,12 +1,18 @@
-// bot/useBotConnection.jsx
 import { useState, useCallback } from "react";
 
-export default function useBotConnection({ onBotBet, onBotMessage, onBotLeave }) {
+export default function useBotConnection({ onPlaceRouletteBet, onBotMessage, onBotLeave }) {
   const [bot, setBot] = useState(null);
 
   const getRandomAmount = () => Math.floor(Math.random() * 91) + 10; // 10–100
 
-  // 35% eséllyel csatlakozik a kör elején
+  // Rulett tét generálás (0–36 közötti számra)
+  const createRandomBet = () => {
+    const fieldId = Math.floor(Math.random() * 37); // 0..36
+    const amount = getRandomAmount();
+    return { fieldId, amount };
+  };
+
+  // 35% eséllyel csatlakozik ÉS első körben azonnal tesz tétet
   const maybeJoin = useCallback(() => {
     if (bot) return false;
 
@@ -18,30 +24,24 @@ export default function useBotConnection({ onBotBet, onBotMessage, onBotLeave })
       name: "Casino Bot",
       inGame: true,
     };
-
     setBot(newBot);
-    return true;
-  }, [bot]);
 
-  // Rulett tét
+    // első körben azonnal tesz egy tétet
+    const bet = createRandomBet();
+    onPlaceRouletteBet(bet);
+
+    return true;
+  }, [bot, onPlaceRouletteBet]);
+
+  // további körökben tét (ha már bent ül)
   const placeRouletteBet = useCallback(() => {
     if (!bot) return;
+    const bet = createRandomBet();
+    onPlaceRouletteBet(bet);
+  }, [bot, onPlaceRouletteBet]);
 
-    const amount = getRandomAmount();
-    const colors = ["red", "black"];
-    const color = colors[Math.floor(Math.random() * colors.length)];
+  const winMessages = ["Nyertem!", "Gazdag vagyok!", "Megyek Hollywoodba!"];
 
-    const bet = {
-      playerId: "bot",
-      amount,
-      betType: "color",
-      value: color,
-    };
-
-    onBotBet(bet);
-  }, [bot, onBotBet]);
-
-  // Kör végi logika
   const handleRoundResult = useCallback(
     (botWon) => {
       if (!bot) return;
@@ -49,19 +49,20 @@ export default function useBotConnection({ onBotBet, onBotMessage, onBotLeave })
       let shouldLeave = false;
       let reason = null;
 
-      // Ha nyert → 50% üzen, 50% kilép
       if (botWon) {
+        // 50% eséllyel mond valamit
         if (Math.random() < 0.5) {
-          const msgs = ["Nyertem!", "Gazdag vagyok!", "Megyek Hollywoodba!"];
-          onBotMessage(msgs[Math.floor(Math.random() * msgs.length)]);
+          const msg = winMessages[Math.floor(Math.random() * winMessages.length)];
+          onBotMessage(msg);
         }
 
+        // 50% eséllyel kilép
         if (Math.random() < 0.5) {
           shouldLeave = true;
         }
       }
 
-      // Minden körben 10% eséllyel "Mindent elvesztettem"
+      // minden kör végén 10% eséllyel "Mindent elvesztettem"
       if (!shouldLeave && Math.random() < 0.1) {
         shouldLeave = true;
         reason = "Mindent elvesztettem";

@@ -3,41 +3,41 @@ import RouletteWheel from "./RouletteWheel.jsx";
 import RouletteTable from "./RouletteTable.jsx";
 import RouletteChips from "./RouletteChips.jsx";
 import useBotConnection from "../bot/useBotConnection.jsx";
+
+import "../bot.css";
 import "./roulette.css";
 
 export default function RouletteGame() {
   // ------------------------------
-  // MOBIL ORIENTATION FIGYELÉS
+  // ORIENTATION CHECK
   // ------------------------------
-  const [isLandscape, setIsLandscape] = useState(
-    window.innerWidth > window.innerHeight
-  );
+  const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
 
   useEffect(() => {
-    const checkOrientation = () => {
-      setIsLandscape(window.innerWidth > window.innerHeight);
-    };
-
-    window.addEventListener("resize", checkOrientation);
-    window.addEventListener("orientationchange", checkOrientation);
-
+    const check = () => setIsLandscape(window.innerWidth > window.innerHeight);
+    window.addEventListener("resize", check);
+    window.addEventListener("orientationchange", check);
     return () => {
-      window.removeEventListener("resize", checkOrientation);
-      window.removeEventListener("orientationchange", checkOrientation);
+      window.removeEventListener("resize", check);
+      window.removeEventListener("orientationchange", check);
     };
   }, []);
 
   // ------------------------------
-  // RULETT LOGIKA
+  // RULETT LOGIC
   // ------------------------------
   const [balance, setBalance] = useState(1000);
-  const [bets, setBets] = useState([]);
+  const [playerBets, setPlayerBets] = useState([]);
+  const [botBets, setBotBets] = useState([]);
   const [selectedChip, setSelectedChip] = useState(10);
+
   const [result, setResult] = useState(null);
   const [spinning, setSpinning] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const chipObjects = [
+  const [message, setMessage] = useState("");
+  const [botMessage, setBotMessage] = useState("");
+
+  const chips = [
     { value: 5, color: "black" },
     { value: 10, color: "blue" },
     { value: 25, color: "green" },
@@ -45,12 +45,36 @@ export default function RouletteGame() {
     { value: 100, color: "purple" }
   ];
 
-  const currentChip = chipObjects.find((c) => c.value === selectedChip);
-  const totalBet = bets.reduce((sum, b) => sum + b.amount, 0);
+  const currentChip = chips.find((c) => c.value === selectedChip);
+  const totalBet = playerBets.reduce((s, b) => s + b.amount, 0);
 
   // ------------------------------
-  // BOT – Rulett AI
+  // RULETT SZÍNEK (A TE KÉPED ALAPJÁN)
   // ------------------------------
+  const getColorForNumber = (num) => {
+    if (num === 0) return "green";
+
+    const reds = new Set([
+      32, 19, 21, 25, 34, 27,
+      36, 30, 23, 5, 16, 1,
+      14, 9, 18, 7, 12, 3
+    ]);
+
+    return reds.has(num) ? "red" : "black";
+  };
+
+  // ------------------------------
+  // BOT – valid field list
+  // ------------------------------
+  const VALID_FIELDS = [
+    ...Array.from({ length: 37 }, (_, i) => String(i)),
+    "1to18", "19to36",
+    "even", "odd",
+    "red", "black",
+    "1st12", "2nd12", "3rd12",
+    "2to1-left", "2to1-mid", "2to1-right"
+  ];
+
   const {
     bot,
     isBotPresent,
@@ -58,33 +82,18 @@ export default function RouletteGame() {
     placeRouletteBet,
     handleRoundResult
   } = useBotConnection({
-    onBotBet: (bet) => {
-      // BOT tétje NEM jelenik meg vizuálisan, de számít a kör eredményénél
-      setBets((prev) => [
-        ...prev,
-        {
-          fieldId: bet.value, // red vagy black
-          amount: bet.amount,
-          isBot: true
-        }
-      ]);
+    onPlaceRouletteBet: ({ fieldId, amount }) => {
+      setBotBets((prev) => [...prev, { fieldId, amount, isBot: true }]);
     },
-
-    onBotMessage: (msg) => {
-      setMessage("Bot: " + msg);
-    },
-
-    onBotLeave: (reason) => {
-      if (reason) {
-        setMessage("Bot: " + reason);
-      } else {
-        setMessage("A bot elhagyta a játékot.");
-      }
+    onBotMessage: (msg) => setBotMessage(msg),
+    onBotLeave: (msg) => {
+      setBotMessage(msg || "Kiléptem.");
+      setBotBets([]);
     }
   });
 
   // ------------------------------
-  // TÉT FELRAKÁS
+  // PLAYER PLACES BET
   // ------------------------------
   const handlePlaceBet = (fieldId) => {
     if (spinning) return;
@@ -94,54 +103,50 @@ export default function RouletteGame() {
       return;
     }
 
-    setBets((prev) => {
-      const existing = prev.find((b) => b.fieldId === fieldId);
-
-      if (existing) {
+    setPlayerBets((prev) => {
+      const exists = prev.find((b) => b.fieldId === fieldId);
+      if (exists) {
         return prev.map((b) =>
-          b.fieldId === fieldId
-            ? { ...b, amount: b.amount + currentChip.value }
-            : b
+          b.fieldId === fieldId ? { ...b, amount: b.amount + currentChip.value } : b
         );
       }
-
-      return [
-        ...prev,
-        {
-          fieldId,
-          amount: currentChip.value,
-          color: currentChip.color
-        }
-      ];
+      return [...prev, { fieldId, amount: currentChip.value }];
     });
   };
 
   // ------------------------------
-  // TÉTEK TÖRLÉSE
+  // CLEAR BETS
   // ------------------------------
   const clearBets = () => {
     if (spinning) return;
-    setBets([]);
+    setPlayerBets([]);
     setMessage("Tétek törölve.");
   };
 
   // ------------------------------
-  // PÖRGETÉS + BOT LOGIKA
+  // SPIN THE WHEEL
   // ------------------------------
   const handleSpin = () => {
-    // BOT csatlakozik 35% eséllyel
-    const joined = maybeJoin();
-    if (joined) setMessage("A bot csatlakozott a játékhoz.");
+    if (spinning) return;
 
-    // BOT tesz tétet
-    if (isBotPresent) placeRouletteBet();
+    // BOT JOIN & BET
+    if (maybeJoin()) {
+      setBotMessage("Csatlakoztam a játékhoz 🤖");
+    }
 
-    if (bets.length === 0) {
+    if (isBotPresent) {
+      const field = VALID_FIELDS[Math.floor(Math.random() * VALID_FIELDS.length)];
+      const amount = Math.floor(Math.random() * 10) * 10 + 10;
+      placeRouletteBet({ fieldId: field, amount });
+    }
+
+    if (playerBets.length === 0) {
       setMessage("Tegyél fel tétet!");
       return;
     }
 
     setMessage("");
+    setBotMessage("");
     setSpinning(true);
 
     const winning = Math.floor(Math.random() * 37);
@@ -149,26 +154,44 @@ export default function RouletteGame() {
     setTimeout(() => {
       setResult(winning);
 
-      const winBets = bets.filter((b) => b.fieldId == winning);
-      let winAmount = 0;
-
-      winBets.forEach((b) => {
-        winAmount += b.amount * 35;
+      // PLAYER WIN
+      let playerWin = 0;
+      playerBets.forEach((b) => {
+        if (String(b.fieldId) === String(winning)) {
+          playerWin += b.amount * 35;
+        }
       });
 
-      setBalance(balance - totalBet + winAmount);
+      // BOT WIN
+      let botWin = 0;
+      botBets.forEach((b) => {
+        if (String(b.fieldId) === String(winning)) {
+          botWin += b.amount * 35;
+        }
+      });
 
-      if (winAmount > 0) {
-        setMessage(`Nyertél ${winAmount} tokent!`);
-      } else {
-        setMessage(`Nem nyertél. Nyerő szám: ${winning}`);
-      }
+      // UPDATE BALANCE
+      setBalance((prev) => prev - totalBet + playerWin);
 
-      // BOT kör végi viselkedése
-      const botWon = winAmount > 0;
-      handleRoundResult(botWon);
+      const color = getColorForNumber(winning);
+      const colorText =
+        color === "red" ? "piros" :
+        color === "black" ? "fekete" :
+        "zöld";
 
-      setBets([]);
+      setMessage(
+        playerWin > 0
+          ? `Nyertél ${playerWin} tokent!`
+          : `Nem nyertél. Nyerő szám: ${winning} (${colorText})`
+      );
+
+      // BOT REACTS
+      handleRoundResult(botWin > 0);
+
+      // CLEAR BETS
+      setPlayerBets([]);
+      setBotBets([]);
+
       setSpinning(false);
     }, 4200);
   };
@@ -180,59 +203,51 @@ export default function RouletteGame() {
     <>
       {!isLandscape && (
         <div className="rotate-overlay">
-          📱 Kérlek fordítsd el a telefont fekvő (landscape) nézetbe a játékhoz!
+          📱 Kérlek fordítsd el a telefont fekvő módba!
         </div>
       )}
 
       <div className="roulette-responsive-wrapper">
         <div className="roulette-root">
           
-          {/* BAL OLDAL */}
+          {/* LEFT SIDE */}
           <div className="left-side">
             <div className="balance-box">Egyenleg: {balance} token</div>
 
             <RouletteWheel number={result} spinning={spinning} />
 
-            <button
-              className="spin-button"
-              onClick={handleSpin}
-              disabled={spinning}
-            >
+            <button className="spin-button" onClick={handleSpin} disabled={spinning}>
               Megpörgetem
             </button>
 
             {message && <div className="info-msg">{message}</div>}
           </div>
 
-          {/* JOBB OLDAL */}
+          {/* RIGHT SIDE */}
           <div className="right-side">
             <RouletteTable
-              bets={bets.filter((b) => !b.isBot)} // BOT tétje nem jelenik meg
+              bets={[...playerBets, ...botBets]}   // BOT BETS INCLUDED
               onPlaceBet={handlePlaceBet}
             />
 
             <div className="chip-and-clear">
-              <RouletteChips
-                selected={selectedChip}
-                onSelect={setSelectedChip}
-              />
-
-              <div className="total-bet-side">
-                Összesen feltett tét: {totalBet}
-              </div>
-
-              <button
-                className="clear-button"
-                onClick={clearBets}
-                disabled={spinning}
-              >
+              <RouletteChips selected={selectedChip} onSelect={setSelectedChip} />
+              <div className="total-bet-side">Összesen feltett tét: {totalBet}</div>
+              <button className="clear-button" onClick={clearBets} disabled={spinning}>
                 Tétek törlése
               </button>
             </div>
           </div>
-
         </div>
       </div>
+
+      {/* BOT ICON */}
+      {isBotPresent && (
+        <div className="bot-profile">
+          <div className="bot-icon">🤖</div>
+          {botMessage && <div className="bot-tooltip">{botMessage}</div>}
+        </div>
+      )}
     </>
   );
 }

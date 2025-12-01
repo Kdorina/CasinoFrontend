@@ -112,6 +112,15 @@
   box-shadow: 0px 0px 20px rgba(0,0,0,0.7);
 }
 
+.wheel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;      /* teljes kerék belefér */
+  object-position: center;  /* középre igazítja */
+  display: block;           /* ne legyen extra fehér hely */
+}
+
+
 .wheel-image.spinning {
   animation: wheelspin 4s linear;
 }
@@ -317,6 +326,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-around;
   gap: 12px;
   margin-top: 20px;
 }
