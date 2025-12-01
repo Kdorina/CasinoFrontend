@@ -49,22 +49,16 @@ export default function RouletteGame() {
   const totalBet = playerBets.reduce((s, b) => s + b.amount, 0);
 
   // ------------------------------
-  // RULETT SZÍNEK (A TE KÉPED ALAPJÁN)
+  // RULETT COLORS
   // ------------------------------
   const getColorForNumber = (num) => {
     if (num === 0) return "green";
-
-    const reds = new Set([
-      32, 19, 21, 25, 34, 27,
-      36, 30, 23, 5, 16, 1,
-      14, 9, 18, 7, 12, 3
-    ]);
-
+    const reds = new Set([32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3]);
     return reds.has(num) ? "red" : "black";
   };
 
   // ------------------------------
-  // BOT – valid field list
+  // BOT FIELD OPTIONS
   // ------------------------------
   const VALID_FIELDS = [
     ...Array.from({ length: 37 }, (_, i) => String(i)),
@@ -75,6 +69,9 @@ export default function RouletteGame() {
     "2to1-left", "2to1-mid", "2to1-right"
   ];
 
+  // ------------------------------
+  // BOT CONNECTION
+  // ------------------------------
   const {
     bot,
     isBotPresent,
@@ -83,9 +80,20 @@ export default function RouletteGame() {
     handleRoundResult
   } = useBotConnection({
     onPlaceRouletteBet: ({ fieldId, amount }) => {
-      setBotBets((prev) => [...prev, { fieldId, amount, isBot: true }]);
-    },
+  setBotBets(prev => [
+    ...prev,
+    {
+      fieldId,
+      amount,
+      color: "bot",  // itt állítjuk be a bot színét
+      isBot: true
+    }
+  ]);
+},
+
+
     onBotMessage: (msg) => setBotMessage(msg),
+
     onBotLeave: (msg) => {
       setBotMessage(msg || "Kiléptem.");
       setBotBets([]);
@@ -93,26 +101,41 @@ export default function RouletteGame() {
   });
 
   // ------------------------------
-  // PLAYER PLACES BET
+  // PLAYER BET
   // ------------------------------
-  const handlePlaceBet = (fieldId) => {
-    if (spinning) return;
+const handlePlaceBet = (fieldId) => {
+  if (spinning) return;
 
-    if (balance - totalBet < currentChip.value) {
-      setMessage("Nincs elég egyenleged!");
-      return;
+  if (balance - totalBet < currentChip.value) {
+    setMessage("Nincs elég egyenleged!");
+    return;
+  }
+
+  setPlayerBets((prev) => {
+    const existing = prev.find((b) => b.fieldId === fieldId);
+
+    if (existing) {
+      // csak az amount nő, a color marad, ami volt
+      return prev.map((b) =>
+        b.fieldId === fieldId
+          ? { ...b, amount: b.amount + currentChip.value }
+          : b
+      );
     }
 
-    setPlayerBets((prev) => {
-      const exists = prev.find((b) => b.fieldId === fieldId);
-      if (exists) {
-        return prev.map((b) =>
-          b.fieldId === fieldId ? { ...b, amount: b.amount + currentChip.value } : b
-        );
+    // ÚJ tét – FONTOS: color is megy vele
+    return [
+      ...prev,
+      {
+        fieldId,
+        amount: currentChip.value,
+        color: currentChip.color,
+        isBot: false
       }
-      return [...prev, { fieldId, amount: currentChip.value }];
-    });
-  };
+    ];
+  });
+};
+
 
   // ------------------------------
   // CLEAR BETS
@@ -124,22 +147,52 @@ export default function RouletteGame() {
   };
 
   // ------------------------------
-  // SPIN THE WHEEL
+  // BOT — instant tét, amikor csatlakozik
+  // ------------------------------
+  useEffect(() => {
+    if (!isBotPresent) return;
+    if (botBets.length > 0) return;
+
+    const field = VALID_FIELDS[Math.floor(Math.random() * VALID_FIELDS.length)];
+    const amount = Math.floor(Math.random() * 10) * 10 + 10;
+
+    placeRouletteBet({ fieldId: field, amount });
+    setBotMessage("Tettem egy tétet 🤖");
+  }, [isBotPresent]);
+
+  // ------------------------------
+  // BOT — minden új kör elején új tét
+  // ------------------------------
+  useEffect(() => {
+    if (!isBotPresent) return;
+    if (spinning) return;
+
+    const field = VALID_FIELDS[Math.floor(Math.random() * VALID_FIELDS.length)];
+    const amount = Math.floor(Math.random() * 10) * 10 + 10;
+
+    placeRouletteBet({ fieldId: field, amount });
+    setBotMessage("Új tétet tettem 🤖");
+
+  }, [result]);
+
+  // ------------------------------
+  // SPIN
   // ------------------------------
   const handleSpin = () => {
     if (spinning) return;
 
-    // BOT JOIN & BET
+    // BOT attempt join
     if (maybeJoin()) {
       setBotMessage("Csatlakoztam a játékhoz 🤖");
     }
 
-    if (isBotPresent) {
-      const field = VALID_FIELDS[Math.floor(Math.random() * VALID_FIELDS.length)];
-      const amount = Math.floor(Math.random() * 10) * 10 + 10;
-      placeRouletteBet({ fieldId: field, amount });
+    // BOTNAK KÖTELEZŐ TÉTELHELYEZÉS
+    if (isBotPresent && botBets.length === 0) {
+      setBotMessage("Várj, még nem tettem tétet! 🤖");
+      return;
     }
 
+    // PLAYER needs a bet
     if (playerBets.length === 0) {
       setMessage("Tegyél fel tétet!");
       return;
@@ -154,7 +207,7 @@ export default function RouletteGame() {
     setTimeout(() => {
       setResult(winning);
 
-      // PLAYER WIN
+      // PLAYER RESULT
       let playerWin = 0;
       playerBets.forEach((b) => {
         if (String(b.fieldId) === String(winning)) {
@@ -162,7 +215,7 @@ export default function RouletteGame() {
         }
       });
 
-      // BOT WIN
+      // BOT RESULT
       let botWin = 0;
       botBets.forEach((b) => {
         if (String(b.fieldId) === String(winning)) {
@@ -170,14 +223,10 @@ export default function RouletteGame() {
         }
       });
 
-      // UPDATE BALANCE
       setBalance((prev) => prev - totalBet + playerWin);
 
       const color = getColorForNumber(winning);
-      const colorText =
-        color === "red" ? "piros" :
-        color === "black" ? "fekete" :
-        "zöld";
+      const colorText = color === "red" ? "piros" : color === "black" ? "fekete" : "zöld";
 
       setMessage(
         playerWin > 0
@@ -185,10 +234,10 @@ export default function RouletteGame() {
           : `Nem nyertél. Nyerő szám: ${winning} (${colorText})`
       );
 
-      // BOT REACTS
+      // BOT RESPONSE
       handleRoundResult(botWin > 0);
 
-      // CLEAR BETS
+      // RESET BETS
       setPlayerBets([]);
       setBotBets([]);
 
@@ -203,7 +252,7 @@ export default function RouletteGame() {
     <>
       {!isLandscape && (
         <div className="rotate-overlay">
-          📱 Kérlek fordítsd el a telefont fekvő módba!
+          📱 Kérlek fordítsd el a telefont fekvő nézetbe!
         </div>
       )}
 
@@ -226,13 +275,17 @@ export default function RouletteGame() {
           {/* RIGHT SIDE */}
           <div className="right-side">
             <RouletteTable
-              bets={[...playerBets, ...botBets]}   // BOT BETS INCLUDED
+              bets={[...playerBets, ...botBets]}
               onPlaceBet={handlePlaceBet}
             />
 
             <div className="chip-and-clear">
               <RouletteChips selected={selectedChip} onSelect={setSelectedChip} />
-              <div className="total-bet-side">Összesen feltett tét: {totalBet}</div>
+
+              <div className="total-bet-side">
+                Összesen feltett tét: {totalBet}
+              </div>
+
               <button className="clear-button" onClick={clearBets} disabled={spinning}>
                 Tétek törlése
               </button>

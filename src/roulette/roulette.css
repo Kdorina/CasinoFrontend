@@ -109,44 +109,46 @@
   border-radius: 50%;
   overflow: hidden;
   position: relative;
-  box-shadow: 0px 0px 20px rgba(0,0,0,0.7);
 }
+
 
 .wheel-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;      /* teljes kerék belefér */
-  object-position: center;  /* középre igazítja */
-  display: block;           /* ne legyen extra fehér hely */
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 
-.wheel-image.spinning {
-  animation: wheelspin 4s linear;
+/* pörgés – csak a transform-ot animáljuk */
+.spin-physics {
+  animation: spinPhysics 4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
 }
 
-.spin {
-  animation: spinAnimation 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+@keyframes spinPhysics {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(var(--finalAngle));
+  }
 }
 
-@keyframes wheelspin {
-  from { rotate: 0deg; }
-  to   { rotate: 360deg; }
-}
-
-/* --- REALISTIC POINTER --- */
+/* pointer – FEJJEL FELFELÉ mutat a kerék közepe felé */
 .wheel-pointer {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-top: 22px solid white;
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
+  border-top: 20px solid white;  /* ▼ lefelé néző háromszög */
   z-index: 10;
 }
+
 
 /* --- KERÉK FIZIKAI PÖRGÉS --- */
 .spin-physics {
@@ -183,6 +185,7 @@
   justify-content: center;
   color: white;
   box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  z-index: 3;
 }
 
 /* Színes kaszinóchipek */
@@ -308,19 +311,30 @@
 
 .chip.blue {
   background: #1976d2;
+
 }
 
 .chip.green {
   background: #43a047;
+
 }
 
 .chip.red {
   background: #e53935;
+
 }
 
 .chip.purple {
   background: #8e24aa;
+
 }
+.chip-bot {
+  background: #00e5ff;
+  border-color: rgb(213, 255, 75);
+  box-shadow: 0 0 10px #00e5ff;
+
+}
+
 
 .chip-and-clear {
   display: flex;
