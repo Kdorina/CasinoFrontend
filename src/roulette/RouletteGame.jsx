@@ -3,6 +3,7 @@ import RouletteWheel from "./RouletteWheel.jsx";
 import RouletteTable from "./RouletteTable.jsx";
 import RouletteChips from "./RouletteChips.jsx";
 import useBotConnection from "../bot/useBotConnection.jsx";
+import Navbar from "/src/components/Navbar.jsx";
 
 import "../bot.css";
 import "./roulette.css";
@@ -257,6 +258,12 @@ const handlePlaceBet = (fieldId) => {
       )}
 
       <div className="roulette-responsive-wrapper">
+           {/* NAVBAR */}
+              <Navbar 
+                tokens={200}
+                onLogout={() => alert("Kijelentkezve!")}
+              />
+              <a href="/home">Vissza a főoldalra</a>
         <div className="roulette-root">
           
           {/* LEFT SIDE */}

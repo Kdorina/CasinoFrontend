@@ -1,23 +1,17 @@
-/* Teljes oldal háttér */
-.home-wrapper {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.navbar-holder{
+    padding:20px;
 }
-
-/* NAVBAR */
 .navbar {
   width: 90%;
   background: black;
-  padding:10px;
+  padding: 10px 15px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
-  margin:0px auto;
+  margin: 0px auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+
 }
 
 /* Bal oldal */
@@ -55,16 +49,18 @@
   font-weight: bold;
   cursor: pointer;
 }
+
 .logout-btn:hover {
   opacity: 0.8;
 }
 
-/* Token kapszula */
+/* Token “pill” */
 .token-pill {
   background: #dcff62;
   padding: 8px 16px;
   border-radius: 8px;
   font-weight: bold;
+  color: black;
 }
 
 /* Avatar */
@@ -75,16 +71,16 @@
   border-radius: 50%;
 }
 
-/* Tartalom */
-.home-content {
-  text-align: center;
-  margin-top: 40px;
-}
+/* Mobil reszponzív */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
 
-.home-content h2 {
-  color: white;
-}
-.home-content p {
-  color: #cccccc;
-  margin-top: 8px;
+  .navbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
 }

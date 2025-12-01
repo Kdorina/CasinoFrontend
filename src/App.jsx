@@ -15,8 +15,8 @@ import Withdraw from "./components/Withdraw.jsx";
 import BuyToken from "./components/Buy/BuyToken.jsx";
 import CasinoMainPage from "./components/CasinoMainPage.jsx";
 import RouletteGame from "./roulette/RouletteGame.jsx";
-import BotGame from "./components/BotGame.jsx";
 import BlackJack from "./components/BlackJack/BlackJack.jsx";
+import Profile from "./components/Profile.jsx";
 
 
 
@@ -67,6 +67,7 @@ const showMenu = false;
               <Register onRegisterSuccess={() => setLoggedIn(true)} />
             }
           />
+           <Route path="/profile" element={<Profile />} />
 
           {/* test route */}
         <Route path="/home" element={<Home />} />
@@ -84,7 +85,6 @@ const showMenu = false;
           />*/}
       {/* RULETT OLDALAK */}
           <Route path="/roulette" element={<RouletteGame />} />
-          <Route path="/bot-demo" element={<BotGame />} />
             <Route path="/blackjack" element={<BlackJack />} />
 
           {/* TOKEN VÁSÁRLÁS */}

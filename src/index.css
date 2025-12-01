@@ -27,6 +27,7 @@ a:hover {
 
 html{
   color-scheme: light dark;
+  background-color: #175E3B; 
 }
 
 body {
@@ -34,7 +35,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  background: #175E3B; /* Kaszinó zöld háttér */
+  background-color: #175E3B; 
 }
 
 /* Minden oldal tartalma legyen középen */
