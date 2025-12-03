@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createAIPlayer } from "./Blackjackbot";
 
+
+
+
+//Kártya pakli
 const SUITS = ["♠", "♥", "♦", "♣"];
 const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
@@ -33,6 +38,10 @@ function handValue(hand) {
 export default function Blackjack() {
   const navigate = useNavigate();
 
+  // Ai játékos
+  const [ai, setAi] = useState(createAIPlayer());
+  const [aiPoints, setAiPoints] = useState(0);
+
   const [bet, setBet] = useState("");
   const [betLocked, setBetLocked] = useState(false);
 
@@ -41,25 +50,43 @@ export default function Blackjack() {
   const [revealed, setRevealed] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [aiRevealed, setAiRevealed] = useState(false);
+  const [aiMessage, setAiMessage] = useState("");
+
   const [insuranceTaken, setInsuranceTaken] = useState(false);
   const [insuranceMessage, setInsuranceMessage] = useState("");
 
-  // Játék kezdete
-  const startGame = () => {
-    if (!bet || bet <= 0) return;
 
-    const p1 = drawCard();
-    const p2 = drawCard();
-    const d1 = drawCard(); // EZ a látható lap
-    const d2 = drawCard(); // EZ a rejtett lap
 
-    setPlayer([p1, p2]);
-    setDealer([d1, d2]); // FONTOS: dealer[0] = látható
-    setBetLocked(true);
-    setInsuranceTaken(false);
-    setInsuranceMessage("");
-    setMessage("");
-  };
+const startGame = () => {
+  if (!bet || bet <= 0) return;
+
+  const p1 = drawCard();
+  const p2 = drawCard();
+  const d1 = drawCard(); 
+  const d2 = drawCard();
+
+  //AI PLAYER INIT
+  const newAI = createAIPlayer();
+  newAI.placeBet(); // random 100 vagy 200
+
+  const aiCards = [drawCard(), drawCard()];
+  newAI.cards = aiCards;
+
+  setAi(newAI);
+  setAiPoints(handValue(aiCards));
+ 
+
+  setPlayer([p1, p2]);
+  setDealer([d1, d2]);
+  setBetLocked(true);
+  setInsuranceTaken(false);
+  setInsuranceMessage("");
+  setMessage("");
+  setAiRevealed(false);
+  setAiMessage("");
+};
+
 
   // Hit
   const hit = () => {
@@ -70,30 +97,88 @@ export default function Blackjack() {
     if (handValue(newHand) > 21) {
       setMessage("Vesztettél – túlmentél 21-en.");
       setRevealed(true);
+      setAiRevealed(true);
     }
   };
 
   // Stand
-  const stand = () => {
-    setRevealed(true);
+const stand = () => {
+  setRevealed(true);
 
-    let d = [...dealer];
-    while (handValue(d) < 17) {
-      d.push(drawCard());
-    }
-    setDealer(d);
+  // --- DEALER HÚZ ---
+  let d = [...dealer];
+  while (handValue(d) < 17) {
+    d.push(drawCard());
+  }
+  setDealer(d);
 
-    const playerV = handValue(player);
-    const dealerV = handValue(d);
+  const dealerV = handValue(d);
+  const playerV = handValue(player);
 
-    if (dealerV > 21 || playerV > dealerV) {
-      setMessage("Nyertél!");
-    } else if (playerV === dealerV) {
-      setMessage("Döntetlen.");
+  // --- TE EREDMÉNY ---
+  if (playerV > 21) {
+    setMessage("Vesztettél – túlmentél 21-en.");
+  }
+  else if (dealerV > 21 || playerV > dealerV) {
+    setMessage("Nyertél!");
+  }
+  else if (playerV === dealerV) {
+    setMessage("Döntetlen.");
+  }
+  else {
+    setMessage("Vesztettél.");
+  }
+
+  // --- AI lejátszása ---
+  handleAIPlay();
+
+  // --- AI felfedése ---
+  setAiRevealed(true);
+
+  const aiV = handValue(ai.cards);
+
+  // --- AI eredmény ---
+  if (aiV > 21) {
+    setAiMessage("Vesztettem! :(");
+  } 
+  else if (dealerV > 21) {
+    setAiMessage("Könnyű győzelem.");
+  } 
+  else if (aiV > dealerV) {
+    setAiMessage("Könnyű győzelem.");
+  } 
+  else if (aiV === dealerV) {
+    setAiMessage("Döntetlen… meh.");
+  } 
+  else {
+    setAiMessage("Vesztettem! :(");
+  }
+};
+
+
+
+
+  //Ai köre
+  const handleAIPlay = () => {
+  let updated = { ...ai };
+
+  while (true) {
+    const points = handValue(updated.cards);
+    setAiPoints(points);
+
+    const move = updated.decideMove(points);
+
+    if (move === "hit") {
+      updated.cards.push(drawCard());
     } else {
-      setMessage("Vesztettél.");
+      break;
     }
-  };
+  }
+
+  setAi(updated);
+};
+
+
 
   // Insurance
   const takeInsurance = () => {
@@ -136,17 +221,40 @@ export default function Blackjack() {
 
       const dealerV = handValue(d);
 
-      if (playerV > 21) {
-        setMessage("Vesztettél – túlmentél 21-en.");
-      } else if (dealerV > 21 || playerV > dealerV) {
-        setMessage("Nyertél!");
-      } else if (playerV === dealerV) {
-        setMessage("Döntetlen.");
-      } else {
-        setMessage("Vesztettél.");
-      }
+if (playerV > 21) {
+  setMessage("Vesztettél – túlmentél 21-en.");
+} else if (dealerV > 21 || playerV > dealerV) {
+  setMessage("Nyertél!");
+} else if (playerV === dealerV) {
+  setMessage("Döntetlen.");
+} else {
+  setMessage("Vesztettél.");
+}
 
-      setRevealed(true);
+setRevealed(true);
+
+// 🔥 AI üzenet double után is
+const aiV = aiPoints;
+
+if (aiV > 21) {
+  setAiMessage("Vesztettem! :(");
+} 
+else if (dealerV > 21) {
+  setAiMessage("Könnyű győzelem.");
+}
+else if (aiV > dealerV) {
+  setAiMessage("Könnyű győzelem.");
+}
+else if (aiV === dealerV) {
+  setAiMessage("Döntetlen… meh.");
+}
+else {
+  setAiMessage("Vesztettem! :(");
+}
+
+setAiRevealed(true);
+
+      
     }, 150);
   };
 
@@ -169,6 +277,11 @@ export default function Blackjack() {
     !revealed &&
     !insuranceTaken;
 
+
+
+
+
+// styleok
   return (
     <div
       style={{
@@ -249,95 +362,146 @@ export default function Blackjack() {
             }}
           >
             {/* DEALER KÁRTYÁK */}
-            <div
-              style={{
-                position: "absolute",
-                top: 40,
-                left: 412,
-                display: "flex",
-                gap: 12,
-              }}
-            >
-              {/* FIRST card = LÁTHATÓ */}
-              <div
-                style={{
-                  width: 70,
-                  height: 100,
-                  padding: "6px",
-                  background: "white",
-                  color: "black",
-                  borderRadius: 10,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: 24,
-                  fontWeight: "bold",
-                  boxShadow: "0 8px 15px rgba(0,0,0,0.6)",
-                  border: "2px solid #000",
-                }}
-              >
-                {dealer[0]?.value}
-                {dealer[0]?.suit}
-              </div>
+<div
+  style={{
+    position: "absolute",
+    top: 40,
+    left: 360,
+    display: "flex",
+    gap: 12,
+  }}
+>
+  {dealer.map((c, i) => {
+    const isHiddenSecondCard = i === 1 && !revealed;
 
-              {/* SECOND card = REJTETT */}
-              <div
-                style={{
-                  width: 70,
-                  height: 100,
-                  padding: "6px",
-                  background: revealed
-                    ? "white"
-                    : "linear-gradient(135deg, #b51717, #7a0c0c)",
-                  color: revealed ? "black" : "transparent",
-                  borderRadius: 10,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: 24,
-                  fontWeight: "bold",
-                  boxShadow: "0 8px 15px rgba(0,0,0,0.6)",
-                  border: "2px solid #000",
-                }}
-              >
-                {revealed ? dealer[1]?.value + dealer[1]?.suit : "🂠"}
-              </div>
-            </div>
+    return (
+      <div
+        key={i}
+        style={{
+          width: 70,
+          height: 100,
+          padding: "6px",
+          background: isHiddenSecondCard
+            ? "linear-gradient(135deg, #b51717, #7a0c0c)"
+            : "white",
+          color: isHiddenSecondCard ? "transparent" : "black",
+          borderRadius: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: 24,
+          fontWeight: "bold",
+          boxShadow: "0 8px 15px rgba(0,0,0,0.6)",
+          border: "2px solid #000",
+        }}
+      >
+        {isHiddenSecondCard ? "🂠" : c.value + c.suit}
+      </div>
+    );
+  })}
+</div>
 
-            {/* PLAYER KÁRTYÁK */}
-            <div
-              style={{
-                position: "absolute",
-                top: 245,
-                left: 550,
-                display: "flex",
-                gap: 6,
-              }}
-            >
-              {player.map((c, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: 70,
-                    height: 100,
-                    padding: "6px",
-                    background: "white",
-                    color: "black",
-                    borderRadius: 10,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    boxShadow: "0 8px 15px rgba(0,0,0,0.6)",
-                    border: "2px solid #000",
-                  }}
-                >
-                  {c.value}
-                  {c.suit}
-                </div>
-              ))}
-            </div>
+
+ {/* AI + PLAYER */}
+<div
+  style={{
+    position: "absolute",
+    top: 175,
+    left: 100,
+    width: "750px",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "0 20px",
+  }}
+>
+{/* AI PLAYER */}
+<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+
+  {/* CHAT BUBORÉK */}
+  {aiRevealed && aiMessage && (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.9)",
+        color: "black",
+        padding: "6px 12px",
+        borderRadius: "10px",
+        marginBottom: "6px",
+        fontSize: "14px",
+        boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+        maxWidth: "180px",
+        textAlign: "center"
+      }}
+    >
+      {aiMessage}
+    </div>
+  )}
+
+  <h3>AI Játékos – Tét: {ai.bet}</h3>
+
+  <div style={{ display: "flex", gap: "10px" }}>
+    {ai.cards.map((c, i) => (
+      <div
+        key={i}
+        style={{
+          width: 70,
+          height: 100,
+          padding: "6px",
+          background: aiRevealed ? "white" : "linear-gradient(135deg, #b51717, #7a0c0c)",
+          color: aiRevealed ? "black" : "transparent",
+          borderRadius: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: 24,
+          fontWeight: "bold",
+          boxShadow: "0 8px 15px rgba(0,0,0,0.6)",
+          border: "2px solid #000",
+        }}
+      >
+        {aiRevealed ? c.value + c.suit : "🂠"}
+      </div>
+    ))}
+  </div>
+
+  <p>Lapok összege: {aiRevealed ? aiPoints : "??"}</p>
+
+</div>
+
+
+  {/* TE / PLAYER */}
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <h3>Te  – Tét: {bet}</h3>
+
+    <div style={{ display: "flex", gap: "10px" }}>
+      {player.map((c, i) => (
+        <div key={i}
+          style={{
+            width: 70,
+            height: 100,
+            padding: "6px",
+            background: "white",
+            color: "black",
+            borderRadius: 10,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: 24,
+            fontWeight: "bold",
+            boxShadow: "0 8px 15px rgba(0,0,0,0.6)",
+            border: "2px solid #000",
+          }}
+        >
+          {c.value}{c.suit}
+        </div>
+      ))}
+    </div>
+
+    <p>Lapok összege: {handValue(player)}</p>
+  </div>
+</div>
+
+
+
 
             {/* Tét kijelzés */}
             <div
@@ -355,7 +519,7 @@ export default function Blackjack() {
                 border: "1px solid rgba(255,255,255,0.4)",
               }}
             >
-              Total Bet: {bet}
+              
             </div>
 
             {/* Insurance üzenet */}
@@ -363,7 +527,7 @@ export default function Blackjack() {
               <div
                 style={{
                   position: "absolute",
-                  bottom: 75,
+                  bottom: 100,
                   left: 260,
                   fontSize: 14,
                   color: "gold",
@@ -469,7 +633,7 @@ export default function Blackjack() {
 
           {/* Pontok */}
           <div style={{ marginTop: 20, textAlign: "center" }}>
-            <p>Osztó pont: {revealed ? handValue(dealer) : "?"}</p>
+            <p>Osztó Lapjainak összege: {revealed ? handValue(dealer) : "?"}</p>
             <p>Te: {handValue(player)}</p>
           </div>
 
