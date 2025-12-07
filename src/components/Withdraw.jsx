@@ -5,7 +5,7 @@ const Withdraw = () => {
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
 
-  const { tokens, withdrawTokens, TOKEN_RATE } = useContext(TokenContext);
+  const { tokens, withdrawTokens } = useContext(TokenContext);
 
   const handleWithdraw = (e) => {
     e.preventDefault();
@@ -23,29 +23,26 @@ const Withdraw = () => {
       return;
     }
 
-    // Token csökkentése + Ft konverzió
     const ft = withdrawTokens(num);
 
-    setMessage(
-      `Sikeres kifizetés! ${num} token → ${ft} Ft`
-    );
-
+    setMessage(`✅ ${num} token → ${ft} Ft`);
     setAmount("");
   };
 
   return (
-    <div className="withdraw-container">
-      <h2>Kifizetés</h2>
-
+    <div className="withdraw-popup">
       <form onSubmit={handleWithdraw}>
-        <label>Token mennyiség:</label>
+        <label>Token mennyiség</label>
+
         <input
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
 
-        <button className="primary-btn">Kiváltás</button>
+        <button className="primary-btn">
+          Beváltás
+        </button>
       </form>
 
       {message && <p className="success-msg">{message}</p>}

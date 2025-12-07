@@ -1,86 +1,117 @@
-.navbar-holder{
-    padding:20px;
-}
-.navbar {
-  width: 90%;
-  background: black;
-  padding: 10px 15px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0px auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-
+.token-wrapper {
+  position: relative;
 }
 
-/* Bal oldal */
-.navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+/* ===== TOKEN POPUP ===== */
 
-.navbar-icon {
-  color: white;
-  font-size: 22px;
-}
+.token-popup {
+  position: absolute;
+  top: 50px;
+  right: 0;
 
-.navbar-title {
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-}
+  width: min(92vw, 400px);
+  max-height: calc(100vh - 70px);
 
-/* Jobb oldal */
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* Logout gomb */
-.logout-btn {
-  padding: 8px 16px;
   background: white;
-  color: black;
-  border-radius: 10px;
+  border-radius: 14px;
+  padding: 12px;
+
+  overflow: hidden;
+  z-index: 5000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* TABOK */
+.popup-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.popup-tabs button {
+  flex: 1;
+  padding: 8px;
   border: none;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.logout-btn:hover {
-  opacity: 0.8;
-}
-
-/* Token “pill” */
-.token-pill {
-  background: #dcff62;
-  padding: 8px 16px;
   border-radius: 8px;
   font-weight: bold;
-  color: black;
+  cursor: pointer;
+  background: #eee;
 }
 
-/* Avatar */
-.avatar {
-  width: 45px;
-  height: 45px;
-  background: #d8d8d8;
-  border-radius: 50%;
+.popup-tabs button.active {
+  background: black;
+  color: white;
 }
 
-/* Mobil reszponzív */
+/* BuyToken levágása */
+.buytoken-mask {
+  width: 380px;        /* +20px */
+  height: 520px;
+  overflow-y: auto;    /* ← fontos */
+  overflow-x: hidden;
+  background: white;
+  border-radius: 12px;
+}
+
+
+/* BuyToken root (100vh, háttér) semlegesítése */
+.buytoken-mask > div {
+  height: auto !important;
+  min-height: auto !important;
+  background: transparent !important;
+  padding-top: 0 !important;
+}
+
+/* belső kártya középre */
+.buytoken-mask > div > div {
+  margin: 0 auto;
+}
+.withdraw-popup{
+  background: white;
+  border-radius: 14px;
+  padding: 12px;
+
+  overflow: hidden;
+  z-index: 5000;
+
+}
+.primary-btn{
+  background-color:rgb(155, 182, 230);
+}
+.withdraw-popup form{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Mobil: fullscreen modal */
 @media (max-width: 600px) {
-  .navbar {
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px;
+  .token-wrapper {
+   font-size:2.5vw
+  }
+  .navbar-right{
+    font-size:2.5vw
+  }
+  .token-popup {
+    position: fixed;
+    right: 0;
+  
+    max-height: none;
+
+    border-radius: 20px;
+   
   }
 
-  .navbar-right {
-    width: 100%;
-    justify-content: space-between;
-  }
+  /* BuyToken levágása */
+.buytoken-mask {
+  width: auto;        /* +20px */
+  height: auto;
+  overflow-y: auto;    /* ← fontos */
+  overflow-x: hidden;
+  background: white;
+  border-radius: 12px;
+
+}
+
+
 }
